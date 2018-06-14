@@ -1,0 +1,18 @@
+git clone
+
+go into the folder
+
+checkout a branch (-b if for the first time to create branch)
+git checkout -b myBranch
+
+make changes
+
+add changes
+
+commit changes
+
+push to branch
+
+create pull request
+
+
