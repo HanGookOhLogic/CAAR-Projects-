@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 import numpy as np
 
-def trial_run(data, size, numCol=7):
+def create_coloring(data, size, numCol=7):
     #scalar to RGBA mapping
     #Colormap object generated from a list of colors, colormap is a mapping from numbers to colours
     cmap = colors.ListedColormap(['red', 'blue', 'yellow','green','purple','orange','pink','black','white','brown'])
@@ -37,4 +37,3 @@ def trial_run(data, size, numCol=7):
 numCol = 10
 num=100
 data = np.random.randint(numCol, size=(num,num))
-trial_run(data, num, numCol)
