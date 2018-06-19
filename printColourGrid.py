@@ -33,7 +33,3 @@ def create_coloring(data, size, numCol=7):
 ##  norm=norm,boundaries=bounds,ticks=[-5,0,5])
 ##
     plt.show()
-
-numCol = 10
-num=100
-data = np.random.randint(numCol, size=(num,num))
