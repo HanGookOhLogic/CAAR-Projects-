@@ -12,4 +12,3 @@ np_files = {dir_content: numpy.load(dir_content)
 for file in np_files:
     mylist = numpy.load(file)
     printColourGrid.create_coloring(mylist, len(mylist), 10, name=file[:-4])
-    
