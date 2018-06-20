@@ -4,7 +4,7 @@ import numpy
 
 # CONSTANTS
 S = 4 # Side length of nxn square
-N = 50 # Number of pixels on one side of square
+N = 19 # Number of pixels on one side of square
 K = 7 # Number of colors
 WRAPPING = False # Whether or not we wrap distances across edges of square when finding pairs of pixels unit distaqnce from each other
 ITER = False # Whether to find search for every solution. If ITER = False, the program terminates as soon as the first solution is found
