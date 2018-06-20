@@ -1,11 +1,31 @@
 import math
+from enum import Enum
 
+# Format enum class which specifies which format the list of pairs data structure is returned as
+class Format(Enum):
+    LIST = 1
+    MATRIX = 2
+
+# adds a pair of adjacent pixels to the pairs data structure depending on format specified
+def add_pair(pairs, x1, y1, x2, y2, format):
+    if format == Format.LIST:
+        pairs.append(((x1, y1), (x2, y2)))
+    elif format == Format.MATRIX:
+        pairs[x1][y1].append((x2, y2))
+        pairs[x2][y2].append((x1, y1))
+        
 # Generates a list of pairs of pixels containing points a distance of 1 from each other
 # Input: s - length of side of grid of pixels
 #        n - number of pixels on each side of grid (nxn grid)
 #        wrapping - set to true if we want distances to wrap across edges of grid as if grid was tiled
-def list_of_pixel_pairs(s, n, wrapping):
-    pairs = [[[] for i in range(n)] for j in range(n)] # nxn array of lists of points distance 1 from each pixel
+#        list_format - set to true if you want the function to return 
+def list_of_pixel_pairs(s, n, wrapping, format):
+    pairs = None
+    if format == Format.LIST:
+        pairs = []
+    elif format == Format.MATRIX:
+        pairs = [[[] for i in range(n)] for j in range(n)] # nxn array of lists of points distance 1 from each pixel
+        
     pixel_length = float(s)/n # length of each pixel
   
     for i in range(0, int(math.ceil(float(n)/s + 1))):
@@ -29,18 +49,14 @@ def list_of_pixel_pairs(s, n, wrapping):
                 for x in range(n):
                     for y in range(n):
                         if wrapping:
-                            pairs[x][y].append(((x+i)%n, (y+j)%n))
-                            pairs[(x+i)%n][(y+j)%n].append((x, y))
+                            add_pair(pairs, x, y, (x+i)%n, (y+j)%n, format)
                             if i != 0 and j != 0:
-                                pairs[x][y].append(((x-i)%n, (y+j)%n))
-                                pairs[(x-i)%n][(y+j)%n].append((x, y))
+                                add_pair(pairs, x, y, (x-i)%n, (y+j)%n, format)
                         else:
                             if y + j < n:
                                 if x + i < n:
-                                    pairs[x][y].append((x+i, y+j))
-                                    pairs[x+i][y+j].append((x, y))
+                                    add_pair(pairs, x, y, x+i, y+j, format)
                                 if x - i >= 0 and i != 0 and j != 0:
-                                    pairs[x][y].append((x-i, y+j))
-                                    pairs[x-i][y+j].append((x, y))
+                                    add_pair(pairs, x, y, x-i, y+j, format)
                     
     return pairs
