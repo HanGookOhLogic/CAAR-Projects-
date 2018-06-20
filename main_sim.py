@@ -19,7 +19,7 @@ coloring, cost = simulated_annealing.simulated_annealing(S, N, K, WRAPPING, INIT
 wrappingString = 'False'
 if WRAPPING:
     wrappingString = 'True'
-name = 's' + (str(S)).replace('.',',') + '_n' + str(N) + '_k' + str(K) + '_wrapping' + wrappingString + '_temp' + str(INIT_TEMP) + '_cr' + str(int(COOLING_RATE*100)) + '_cost' + str(cost)
+name = 'sim_annealing/s' + (str(S)).replace('.',',') + '_n' + str(N) + '_k' + str(K) + '_wrapping' + wrappingString + '_temp' + str(INIT_TEMP) + '_cr' + str(int(COOLING_RATE*100)) + '_cost' + str(cost)
 
 #numpy.save(name, coloring)
 
