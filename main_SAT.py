@@ -3,9 +3,9 @@ import printColourGrid
 import numpy
 
 # CONSTANTS
-S = 1.5 # Side length of nxn square
-N = 2 # Number of pixels on one side of square
-K = 4 # Number of colors
+S = 4 # Side length of nxn square
+N = 50 # Number of pixels on one side of square
+K = 7 # Number of colors
 WRAPPING = False # Whether or not we wrap distances across edges of square when finding pairs of pixels unit distaqnce from each other
 ITER = False # Whether to find search for every solution. If ITER = False, the program terminates as soon as the first solution is found
 
@@ -17,7 +17,7 @@ if WRAPPING:
 folderString = 'SAT/'
 if ITER:
     folderString = 'SAT_iter/'
-    
+   
 name = folderString + 's' + (str(S)).replace('.',',') + '_n' + str(N) + '_k' + str(K) + '_wrapping' + wrappingString
 
 if ITER:
