@@ -5,10 +5,10 @@ import numpy
 # CONSTANTS
 S = 4 # Side length of nxn square
 N = 20 # Number of pixels on one side of square
-K = 7 # Number of colors
+K = 6 # Number of colors
 WRAPPING = False # Whether or not we wrap distances across edges of square when finding pairs of pixels unit distaqnce from each other
 INIT_TEMP = 10 # Initial temperature for the simulated annealing algorithm
-COOLING_RATE = 0.15 # Cooling rate for the simulated annealing algorithm. Each iteration, T is multiplied by (1-cooling_rate)
+COOLING_RATE = 0.05 # Cooling rate for the simulated annealing algorithm. Each iteration, T is multiplied by (1-cooling_rate)
 
 
 

@@ -1,3 +1,4 @@
+import math
 import pycosat
 import pairs_helper
 
@@ -20,11 +21,37 @@ def int_to_pixel_color(sat_var, N, K):
 def number_of_variables(N, K):
     return N*N*K                # There is a boolean variable for each pixel and color pair
 
+def set_pixel_color(cnf, i, j, color, N, K):
+    for k in range(K):
+        scale = -1
+        if k == color:
+            scale = 1
+        cnf.append([scale*pixel_color_to_int((i, j), k, N, K)])
+    return
+    
 # Given a list of pairs of adjacent pixels, this function converts the coloring problem to an equivalent CNF formula
 # In this CNF formula, there is a variable for each pixel and color pair, and this set variable is set to true if we
 # color that pixel with that color in a satisfying coloring
-def pairs_to_SAT(pairs, N, K):
+def pairs_to_SAT(pairs, S, N, K):
     cnf = []
+    
+    # We restrict three colors using an embedded equilateral triangle to cut out some redundant SAT solutions
+    pixels_per_unit = N/float(S)
+    
+    # Constrain first pixel to first color to save time
+    i0 = 0
+    j0 = 0
+    set_pixel_color(cnf, i0, j0, 0, N, K)
+    
+    # Constrain pixel that is a distance of 1 horizontally from (0, 0) to be second color
+    i1 = 0
+    j1 = int(math.floor(pixels_per_unit))
+    set_pixel_color(cnf, i1, j1, 1, N, K)
+    
+    # Constrain third pixel equidistant from first and second with length 1
+    i2 = int(math.floor(pixels_per_unit*(math.sqrt(3)/2)))
+    j2 = int(math.floor(pixels_per_unit/2))
+    set_pixel_color(cnf, i2, j2, 2, N, K)
     
     # For each pixel and color pair, add a clause ensuring that at least one pixel color pair set to true
     for i in range(N):
@@ -56,7 +83,7 @@ def solution_to_coloring(solution, N, K):
 # solver and returns a satisfying coloring or "UNSAT" if the problem is not satisfiable
 def SAT_solve(S, N, K, wrapping, itersolve=False):
     pairs = pairs_helper.list_of_pixel_pairs(S, N, wrapping, pairs_helper.Format.LIST)
-    cnf = pairs_to_SAT(pairs, N, K)
+    cnf = pairs_to_SAT(pairs, S, N, K)
     solution = []
     if itersolve:
         solution = pycosat.itersolve(cnf)
