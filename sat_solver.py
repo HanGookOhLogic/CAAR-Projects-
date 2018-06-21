@@ -21,6 +21,7 @@ def int_to_pixel_color(sat_var, N, K):
 def number_of_variables(N, K):
     return N*N*K                # There is a boolean variable for each pixel and color pair
 
+# Sets a pixel to a certain color by appending unary clauses to the cnf formula
 def set_pixel_color(cnf, i, j, color, N, K):
     for k in range(K):
         scale = -1
@@ -60,6 +61,10 @@ def pairs_to_SAT(pairs, S, N, K):
             for k in range(K):
                 clause.append(pixel_color_to_int((i, j), k, N, K))
             cnf.append(clause)
+            
+            for k1 in range(K):
+                for k2 in range(k1):
+                    cnf.append([-1*pixel_color_to_int((i, j), k1, N, K), -1*pixel_color_to_int((i, j), k2, N, K)])
     
     # For each pair of adjacent pixels, ensure that both are not the same color
     for pair in pairs:

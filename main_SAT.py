@@ -3,11 +3,11 @@ import printColourGrid
 import numpy
 
 # CONSTANTS
-S = 40*0.2 # Side length of nxn square
-N = 40 # Number of pixels on one side of square
+S = 1.5 # Side length of nxn square
+N = 2 # Number of pixels on one side of square
 K = 7 # Number of colors
-WRAPPING = True # Whether or not we wrap distances across edges of square when finding pairs of pixels unit distaqnce from each other
-ITER = False # Whether to find search for every solution. If ITER = False, the program terminates as soon as the first solution is found
+WRAPPING = False # Whether or not we wrap distances across edges of square when finding pairs of pixels unit distaqnce from each other
+ITER = True # Whether to find search for every solution. If ITER = False, the program terminates as soon as the first solution is found
 
 
 wrappingString = 'False'
