@@ -39,6 +39,7 @@ print args
 colorings = []
 name = 's' + (str(args.s)).replace('.',',') + '_n' + str(args.n) + '_k' + str(args.k) + '_wrapping' + str(args.wrapping)
 
+# SIMULATED ANNEALING
 if args.sim:
     name = 'sim_annealing/' + name + '_temp' + str(INIT_TEMP) + '_cr' + (str(COOLING_RATE)).replace('.',',')
     
@@ -48,6 +49,7 @@ if args.sim:
     
     name += '_cost' + str(cost)
     
+# SAT SOLVER
 else:
     if not args.iter:
         name = 'SAT/' + name

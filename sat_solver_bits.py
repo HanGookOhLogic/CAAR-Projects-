@@ -14,6 +14,35 @@ def set_bit(int, b):
 def scale_bit(b):
     return 2*b - 1
 
+def create_bit_map(B, K):
+    map = [[] for i in range(K)]
+    
+    bit = B
+    while get_bit(K, bit) == 0:
+        bit -= 1
+    
+    num_sections = int(math.pow(2, bit))
+    length = int(math.pow(2, B - bit))
+    
+    num_divided_sections = clr_bit(K, bit)
+    
+    color = 0
+    number = 0
+    for sec in range(num_sections):
+        if num_divided_sections > 0:
+            for i in range(2):
+                for j in range(length/2):
+                    map[color].append(number)
+                    number += 1
+                color += 1
+            num_divided_sections -= 1
+        else:
+            for j in range(length):
+                map[color].append(number)
+                number += 1
+            color += 1
+    return map    
+    
 # Converts a pixel and color pair to a corresponding unique positive integer representing a boolean variable in a CNF formula
 def pixel_bit_to_int(p, b, N, B):
     return (N*p[0] + p[1])*B + b + 1
@@ -62,6 +91,7 @@ def pairs_to_SAT(pairs, S, N, B, K):
     set_pixel_color(cnf, i2, j2, 2, N, B)
     
     # For each pair of adjacent pixels, ensure that both are not the same color
+    map = create_bit_map(B, K)
     for pair in pairs:
         for k in range(K):
             clause = []
