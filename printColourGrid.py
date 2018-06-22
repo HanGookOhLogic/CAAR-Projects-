@@ -28,6 +28,5 @@ def create_coloring(data, size, numCol=7, name='test'):
     plt.xticks(fontsize=5)
     plt.yticks(fontsize=5)
 
-    fig.savefig('./Colorings/' + name)
-    print 'Fig saved'
+    fig.savefig(name)
     plt.close(fig)
