@@ -34,7 +34,6 @@ parser.add_argument('-cr', type=float, default=COOLING_RATE, help='cooling rate 
 parser.add_argument('--npy', action='store_true', help='store coloring in .npy file instead of png')
 
 args = parser.parse_args()
-print args
 
 colorings = []
 name = 's' + (str(args.s)).replace('.',',') + '_n' + str(args.n) + '_k' + str(args.k) + '_wrapping' + str(args.wrapping)

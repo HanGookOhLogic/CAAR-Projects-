@@ -11,6 +11,9 @@ def get_bit(int, b):
 def set_bit(int, b):
     return (int | (1 << b))
     
+def clr_bit(int, b):
+    return (int & ~(1 << b))
+    
 def scale_bit(b):
     return 2*b - 1
 
@@ -95,9 +98,10 @@ def pairs_to_SAT(pairs, S, N, B, K):
     for pair in pairs:
         for k in range(K):
             clause = []
-            for b in range(B):
+            extra_bits = len(map[k]) / 2
+            for b in range(extra_bits, B):
                 for i in range(2):
-                    clause.append(-1*scale_bit(get_bit(k, b))*pixel_bit_to_int(pair[i], b, N, B))
+                    clause.append(-1*scale_bit(get_bit(map[k][0], b))*pixel_bit_to_int(pair[i], b, N, B))
             cnf.append(clause)
     
     return cnf

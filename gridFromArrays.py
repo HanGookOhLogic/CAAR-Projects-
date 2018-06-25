@@ -2,13 +2,16 @@ import printColourGrid
 import numpy
 from os import listdir
 
-directory_path = '.'
-file_types = ['npy']
+locations = ['SAT', 'SAT_iter', 'sim_annealing']
+for location in locations:
+    directory_path = './colorarrays/' + location + '/'
+    file_types = ['npy']
 
-np_files = {dir_content: numpy.load(dir_content)
-           for dir_content in listdir(directory_path)
-           if dir_content.split('.')[-1] in file_types}
-
-for file in np_files:
-    mylist = numpy.load(file)
-    printColourGrid.create_coloring(mylist, len(mylist), 10, name=file[:-4])
+    np_files = {dir_content: numpy.load(directory_path + dir_content)
+                for dir_content in listdir(directory_path)
+                if dir_content.split('.')[-1] in file_types}
+    
+    for file in np_files:
+        filename = './Colorings/' + location + '/' + file[:-4]
+        printColourGrid.create_coloring(np_files[file], len(np_files[file]), 10, name=filename)
+        print 'Fig saved'
