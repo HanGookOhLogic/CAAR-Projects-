@@ -22,7 +22,7 @@ COOLING_RATE = 0.15 # Cooling rate for the simulated annealing algorithm. Each i
 parser = argparse.ArgumentParser(description="Find discrete colorings of the plane. If command line arguments not used, the default constants in the .py will be used instead.")
 
 parser.add_argument('--sat', action='store_true', help='use the SAT solver')
-parser.add_argument('--sim', action='store_true', help='use simulated annealing')
+parser.add_argument('--sim', action='store_true', help='use simulated annealing. Without this flag the default action is SAT.')
 parser.add_argument('-s', '-S', type=float, default=S, help='side length of nxn square')
 parser.add_argument('-n', '-N', type=int, default=N, help='number of pixels on one side of square')
 parser.add_argument('-k', '-K', type=int, default=K, help='number of colors')
