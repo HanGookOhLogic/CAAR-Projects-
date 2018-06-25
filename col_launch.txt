@@ -1,0 +1,12 @@
+#!/bin/bash
+
+module load pbs
+
+#PBS -N Coloring
+#PBS -l walltime=0:01:00
+#PBS -l select=1:mpiprocs=1:ncpus=4
+#PBS -q workq
+#PBS -e ./pbs_out.txt
+#PBS -o ./pbs_out.txt
+
+python coloring.py
