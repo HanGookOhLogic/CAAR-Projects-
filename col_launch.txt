@@ -1,7 +1,5 @@
 #!/bin/bash
 
-module load pbs
-
 #PBS -N Coloring
 #PBS -l walltime=0:01:00
 #PBS -l select=1:mpiprocs=1:ncpus=4
