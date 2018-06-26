@@ -77,7 +77,7 @@ for coloring in colorings:
         current_name = current_name + str(num_col)
     if args.npy or not canUseMatPlotLib:
         numpy.save('./colorarrays/' + current_name, coloring)
-        print '.npy saved'
+        print current_name + '.npy saved'
     else:
         printColourGrid.create_coloring(coloring, args.n, args.k, './Colorings/' + current_name)
         print 'Fig saved'
