@@ -40,7 +40,7 @@ name = 's' + (str(args.s)).replace('.',',') + '_n' + str(args.n) + '_k' + str(ar
 
 # SIMULATED ANNEALING
 if args.sim:
-    name = 'sim_annealing/' + name + '_temp' + str(INIT_TEMP) + '_cr' + (str(COOLING_RATE)).replace('.',',')
+    name = 'sim_annealing/' + name + '_temp' + str(args.t) + '_cr' + (str(args.cr)).replace('.',',')
     
     # use simulated annealing to find an optimal coloring given the parameters
     coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.t, args.cr)
