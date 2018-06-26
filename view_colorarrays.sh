@@ -1,5 +1,5 @@
 # !/bin/bash
 
-ls ./colorarrays/SAT/*.npy
-ls ./colorarrays/SAT_iter/*.npy
-ls ./colorarrays/sim_annealing/*.npy
+ls ./colorarrays/SAT
+ls ./colorarrays/SAT_iter
+ls ./colorarrays/sim_annealing
