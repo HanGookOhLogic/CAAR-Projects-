@@ -44,7 +44,7 @@ def list_of_pixel_pairs(s, n, wrapping, format):
                 max_dist = math.hypot(pixel_length*(i+1), pixel_length*(j+1))
         
             # if 1 is between the distances, then by continuity, there is a pair of points a distance of 1 in this pair of pixels
-            if min_dist <= 1 and 1 <= max_dist:
+            if min_dist < 1 and 1 <= max_dist:
                 # by symmetry of our pixel division, the pixel pair we found can be applied to any starting pixel, not just (0,0) and we can flip the pair vertically and horizontally as well
                 for x in range(n):
                     for y in range(n):
