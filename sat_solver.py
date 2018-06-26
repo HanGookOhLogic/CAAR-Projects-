@@ -50,9 +50,10 @@ def pairs_to_SAT(pairs, S, N, K):
     set_pixel_color(cnf, i1, j1, 1, N, K)
     
     # Constrain third pixel equidistant from first and second with length 1
-    i2 = int(math.floor(pixels_per_unit*(math.sqrt(3)/2)))
-    j2 = int(math.floor(pixels_per_unit/2))
-    set_pixel_color(cnf, i2, j2, 2, N, K)
+    if K >= 3:
+        i2 = int(math.floor(pixels_per_unit*(math.sqrt(3)/2)))
+        j2 = int(math.floor(pixels_per_unit/2))
+        set_pixel_color(cnf, i2, j2, 2, N, K)
     
     # For each pixel and color pair, add a clause ensuring that at least one pixel color pair set to true
     for i in range(N):
