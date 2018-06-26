@@ -1,5 +1,6 @@
 # !/bin/bash
 
-rm ./colorarrays/SAT/*.npy
-rm ./colorarrays/SAT_iter/*.npy
-rm ./colorarrays/sim_annealing/*.npy
+for COLORPATH in SAT SAT_iter sim_annealing
+do
+	[ -e colorarrays/$COLORPATH/*.npy ] && rm colorarrays/$COLORPATH/*.npy
+done

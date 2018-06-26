@@ -1,5 +1,6 @@
 # !/bin/bash
 
-ls ./colorarrays/SAT
-ls ./colorarrays/SAT_iter
-ls ./colorarrays/sim_annealing
+for COLORPATH in SAT SAT_iter sim_annealing
+do
+	ls colorarrays/$COLORPATH
+done
