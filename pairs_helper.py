@@ -19,7 +19,7 @@ def add_pair(pairs, x1, y1, x2, y2, format):
 #        n - number of pixels on each side of grid (nxn grid)
 #        wrapping - set to true if we want distances to wrap across edges of grid as if grid was tiled
 #        list_format - set to true if you want the function to return 
-def list_of_pixel_pairs(s, n, wrapping, format):
+def list_of_pixel_pairs(s, n, wrapping, format=Format.MATRIX):
     pairs = None
     if format == Format.LIST:
         pairs = []

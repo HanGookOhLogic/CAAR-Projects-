@@ -32,6 +32,7 @@ parser.add_argument('--bits', action='store_true', help='use SAT solver with bit
 parser.add_argument('-t', type=int, default=INIT_TEMP, help='initial temperature for simulated annealing')
 parser.add_argument('-cr', type=float, default=COOLING_RATE, help='cooling rate for simulated annealing')
 parser.add_argument('--dens', action='store_true', help='include density of color in cost of simulated annealing')
+parser.add_argument('--cont', action='store_true', help='reward continuity of color in cost of simulated annealing')
 parser.add_argument('--npy', action='store_true', help='store coloring in .npy file instead of png')
 
 args = parser.parse_args()
@@ -46,9 +47,10 @@ if args.sim:
     name = 'sim_annealing/' + name + '_temp' + str(args.t) + '_cr' + (str(args.cr)).replace('.',',')
     if args.dens:
         name += '_dens'
-    
+    if args.cont:
+        name += '_cont'
     # use simulated annealing to find an optimal coloring given the parameters
-    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.t, args.cr, use_density_cost=args.dens)
+    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont)
     colorings.append(coloring)
     
     name += '_cost' + ("{:.2f}".format(cost)).replace('.',',')

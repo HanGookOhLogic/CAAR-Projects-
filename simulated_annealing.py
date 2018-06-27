@@ -48,7 +48,20 @@ def relative_density_cost(old_color, new_color, n):
         return float(1)/(n*n)
     else:
         return 0
-  
+
+def relative_continuity_cost(assignment, new_pixel, new_color, n, wrapping):
+    cost = 0
+    old_color = assignment[new_pixel[0]][new_pixel[1]]
+    for i in range(new_pixel[0] - 1, new_pixel[0] + 2):
+        for j in range(new_pixel[0] - 1, new_pixel[0] + 2):
+            if not (i == 0 and j == 0):
+                if wrapping or (i >= 0 and i < n and j >= 0 and j < n):
+                    current_color = assignment[i][j]
+                    if current_color != old_color:
+                        cost -= 1
+                    if current_color != new_color:
+                        cost += 1
+    return cost
 # generates a random assignment of colors to pixels
 def random_assignment(k, n):
     return [[random.randrange(k) for i in range(n)] for j in range(n)]
@@ -73,7 +86,7 @@ def change_pixel(assignment, pixel, color):
 # length_increase - the number of repetitions for each temperature is multiplied by length_increase each time we decrease the temperature. So if length_increase is higher, the algorithm will take longer but try more options.
 # use_density_cost - set to True to include the density of the first color in the cost function (useful if we want to try to decrease the occurence of a color as much as possible)
 # density_scale - how much the density of the first color is scaled by for use in the cost
-def simulated_annealing(s, n, k, wrapping=False, T_initial=10, cooling_rate=0.15, final_temp=0.05, length_initial=100, length_increase=1.2, use_density_cost=False, density_scale=1):
+def simulated_annealing(s, n, k, wrapping=False, T_initial=10, cooling_rate=0.15, final_temp=0.05, length_initial=100, length_increase=1.2, use_density_cost=False, density_scale=1, use_continuity_cost=False, continuity_scale=0.25):
     pairs = pairs_helper.list_of_pixel_pairs(s, n, wrapping, pairs_helper.Format.MATRIX)
     current_assignment = random_assignment(k, n)
     current_cost = total_cost(pairs, current_assignment, n)
@@ -81,6 +94,7 @@ def simulated_annealing(s, n, k, wrapping=False, T_initial=10, cooling_rate=0.15
     if use_density_cost:
         first_color_frequency = find_first_color_frequency(current_assignment, n)
         current_cost += density_scale*total_density_cost(first_color_frequency, n)
+        
     
     T = T_initial
     length = length_initial
@@ -92,11 +106,14 @@ def simulated_annealing(s, n, k, wrapping=False, T_initial=10, cooling_rate=0.15
             if use_density_cost:
                 change_in_cost += density_scale*relative_density_cost(current_assignment[new_pixel[0]][new_pixel[1]], new_color, n)
                 
-            if change_in_cost <= 0:
+            continuity_factor = 0
+            if use_continuity_cost:
+                continuity_factor = (continuity_scale/k)*relative_continuity_cost(current_assignment, new_pixel, new_color, n, wrapping)
+            if change_in_cost + continuity_factor <= 0:
                 change_pixel(current_assignment, new_pixel, new_color)
                 current_cost += change_in_cost
             else:
-                Metropolis_probability = math.exp(-1*change_in_cost/T)
+                Metropolis_probability = math.exp(-1*(change_in_cost + continuity_factor)/T)
                 if Metropolis_probability > random.uniform(0,1):
                     change_pixel(current_assignment, new_pixel, new_color)
                     current_cost += change_in_cost
