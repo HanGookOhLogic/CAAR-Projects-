@@ -51,7 +51,7 @@ if args.sim:
     coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.t, args.cr, use_density_cost=args.dens)
     colorings.append(coloring)
     
-    name += '_cost' + ("{:.4f}".format(cost)).replace('.',',')
+    name += '_cost' + ("{:.2f}".format(cost)).replace('.',',')
     
 # SAT SOLVER
 else:

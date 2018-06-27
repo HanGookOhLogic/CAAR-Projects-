@@ -2,5 +2,8 @@
 
 for COLORPATH in SAT SAT_iter sim_annealing
 do
-	[ -e colorarrays/$COLORPATH/*.npy ] && rm colorarrays/$COLORPATH/*.npy
+	for FILENAME in colorarrays/$COLORPATH/*.npy
+	do
+		[ -e "$FILENAME" ] && rm "$FILENAME"
+	done
 done
