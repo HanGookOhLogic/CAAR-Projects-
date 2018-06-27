@@ -6,6 +6,9 @@
 #PBS -j oe
 #PBS -o ./Job_output.txt
 
+export MPICH_RDMA_ENABLED_CUDA=1
+
+
 cd $SCRATCH/CAAR-Projects-
 source $SCRATCH/venv/bin/activate
-python $SCRATCH/CAAR-Projects-/coloring.py $ARGS
+aprun python $SCRATCH/CAAR-Projects-/coloring.py $ARGS
