@@ -1,0 +1,11 @@
+# Launch an interactive session
+#PBS -l walltime=96:00:00
+#PBS -l select=1:ncpus=10:accelerator_model=Tesla_K40s
+#PBS -N coloring
+#PBS -q gpu
+#PBS -j oe
+#PBS -o ./Job_output.txt
+
+cd $SCRATCH/CAAR-Projects-
+source $SCRATCH/venv/bin/activate
+python $SCRATCH/CAAR-Projects-/coloring.py $ARGS
