@@ -5,7 +5,7 @@ import numpy as np
 def create_coloring(data, size, numCol=7, name='test'):
     #scalar to RGBA mapping
     #Colormap object generated from a list of colors, colormap is a mapping from numbers to colours
-    cmap = colors.ListedColormap(['red', 'blue','green', 'yellow','orange','purple','pink','brown','white','black'], N=numCol)
+    cmap = colors.ListedColormap(['red', 'blue','green', 'yellow','orange', 'purple', 'pink', 'brown', 'white', 'black'], N=numCol)
 
     #Generate a colormap index based on discrete intervals. This essentially normalize the colormap's mapping
     #to map from integers (our data) to colours
