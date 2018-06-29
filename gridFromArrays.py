@@ -1,4 +1,4 @@
-import printColourGrid
+import printColorGrid
 import numpy
 from os import listdir
 
@@ -13,5 +13,5 @@ for location in locations:
     
     for file in np_files:
         filename = './Colorings/' + location + '/' + file[:-4]
-        printColourGrid.create_coloring(np_files[file], len(np_files[file]), 10, name=filename)
+        printColorGrid.create_coloring(np_files[file], len(np_files[file]), 10, name=filename)
         print 'Fig saved'

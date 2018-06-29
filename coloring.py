@@ -6,7 +6,7 @@ import sat_solver_bits
 
 canUseMatPlotLib = True
 try:
-    import printColourGrid
+    import printColorGrid
 except ImportError:
     canUseMatPlotLib = False
 
@@ -86,6 +86,7 @@ for coloring in colorings:
         numpy.save('./colorarrays/' + current_name, coloring)
         print current_name + '.npy saved'
     else:
-        printColourGrid.create_coloring(coloring, args.n, args.k, './Colorings/' + current_name)
+        printColorGrid.create_coloring(coloring, args.n, args.k, './Colorings/' + current_name)
         print 'Fig saved'
+        print current_name
     num_col += 1
