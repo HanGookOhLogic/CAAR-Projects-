@@ -3,6 +3,7 @@ import argparse
 import simulated_annealing
 import sat_solver
 import sat_solver_bits
+import integer_programming
 
 canUseMatPlotLib = True
 try:
@@ -23,10 +24,12 @@ parser = argparse.ArgumentParser(description="Find discrete colorings of the pla
 
 parser.add_argument('--sat', action='store_true', help='use the SAT solver')
 parser.add_argument('--sim', action='store_true', help='use simulated annealing. Without this flag the default action is SAT.')
+parser.add_argument('--prog', action='store_true', help='use integer programming')
 parser.add_argument('-s', '-S', type=float, default=S, help='side length of nxn square')
 parser.add_argument('-n', '-N', type=int, default=N, help='number of pixels on one side of square')
 parser.add_argument('-k', '-K', type=int, default=K, help='number of colors')
 parser.add_argument('--wrapping', '--wrap',  action='store_true', help='Whether or not we wrap distances across edges of square when finding pairs of pixels unit distance from each other')
+parser.add_argument('--circ', action='store_true', help='circle bound instead of square')
 parser.add_argument('--iter', action='store_true', help='iterate through all solutions for the SAT solver')
 parser.add_argument('--bits', action='store_true', help='use SAT solver with bit variales')
 parser.add_argument('-t', type=int, default=INIT_TEMP, help='initial temperature for simulated annealing')
@@ -41,7 +44,9 @@ colorings = []
 name = 's' + (str(args.s)).replace('.',',') + '_n' + str(args.n) + '_k' + str(args.k)
 if args.wrapping:
     name += '_wrapping'
-
+if args.circ:
+    name += '_circle'
+    
 # SIMULATED ANNEALING
 if args.sim:
     name = 'sim_annealing/' + name + '_temp' + str(args.t) + '_cr' + (str(args.cr)).replace('.',',')
@@ -50,10 +55,16 @@ if args.sim:
     if args.cont:
         name += '_cont'
     # use simulated annealing to find an optimal coloring given the parameters
-    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont)
+    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.circ, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont)
     colorings.append(coloring)
     
     name += '_cost' + ("{:.2f}".format(cost)).replace('.',',')
+
+elif args.prog:
+    name = 'programming/' + name
+    coloring, cost = integer_programming.relaxed_integer_programming(args.s, args.n, args.k, args.wrapping, args.circ)
+    colorings.append(coloring)
+    name += '_cost' + str(cost)
     
 # SAT SOLVER
 else:
@@ -61,10 +72,10 @@ else:
         name = 'SAT/' + name
         coloring = None
         if not args.bits:
-            coloring = sat_solver.SAT_solve(args.s, args.n, args.k, args.wrapping)
+            coloring = sat_solver.SAT_solve(args.s, args.n, args.k, args.wrapping, args.circ)
         else:
             name = name + '_bits'
-            coloring = sat_solver_bits.SAT_solve(args.s, args.n, args.k, args.wrapping)
+            coloring = sat_solver_bits.SAT_solve(args.s, args.n, args.k, args.wrapping, args.circ)
         
         if coloring == "UNSAT":
             print "This coloring problem is unsatisfiable."
@@ -73,7 +84,7 @@ else:
             
     else:
         name = 'SAT_iter/' + name + '_iter'
-        colorings = sat_solver.SAT_itersolve(args.s, args.n, args.k, args.wrapping)
+        colorings = sat_solver.SAT_itersolve(args.s, args.n, args.k, args.wrapping, args.circ)
         if not colorings:
             print "This coloring problem is unsatisfiable."
 

@@ -122,8 +122,8 @@ def solution_to_coloring(solution, N, B, K):
 # Given parameters S (side length of square), N (number of pixels on side of square), K (number of colors)
 # and wrapping (true if we want pixels to be adjacent accross border of square), this function uses a SAT
 # solver and returns a satisfying coloring or "UNSAT" if the problem is not satisfiable
-def SAT_solve(S, N, K, wrapping, itersolve=False):
-    pairs = pairs_helper.list_of_pixel_pairs(S, N, wrapping, pairs_helper.Format.LIST)
+def SAT_solve(S, N, K, wrapping=False, itersolve=False, circle=False):
+    pairs = pairs_helper.list_of_pixel_pairs(S, N, wrapping, pairs_helper.Format.LIST, circle)
     B = int(math.ceil(math.log(K, 2)))
     cnf = pairs_to_SAT(pairs, S, N, B, K)
     
