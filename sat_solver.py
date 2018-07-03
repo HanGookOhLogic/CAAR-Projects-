@@ -89,5 +89,5 @@ def SAT_solve(S, N, K, wrapping=False, itersolve=False, circle=False):
         return solution_to_coloring(solution, N, K)
 
 # Like SAT_Solve but instead of returning one solution, it returns a list of all solutions
-def SAT_itersolve(S, N, K, wrapping):
-    return SAT_solve(S, N, K, wrapping, True)
+def SAT_itersolve(S, N, K, wrapping, circle):
+    return SAT_solve(S, N, K, wrapping, True, circle)

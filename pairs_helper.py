@@ -8,15 +8,18 @@ class Format(Enum):
 
 def in_circ(point, s, n):
     center_length = float(s)/2
-    dist = math.hypot(point[0] - center_length, point[1] - center_length)
+    pixel_length = float(s)/n
+    x = (point[0]+0.5)*pixel_length
+    y = (point[1]+0.5)*pixel_length
+    dist = math.hypot(x - center_length, y - center_length)
     if dist <= center_length:
         return True
     else:
         return False    
 
 # adds a pair of adjacent pixels to the pairs data structure depending on format specified
-def add_pair(pairs, x1, y1, x2, y2, format, circle):
-    if circle and not (in_circ(x1, y1, s, n) and in_circ(x2, y2, s, n)):
+def add_pair(pairs, x1, y1, x2, y2, s, n, format, circle):
+    if circle and not (in_circ((x1, y1), s, n) and in_circ((x2, y2), s, n)):
         return
     
     if format == Format.LIST:
@@ -61,14 +64,25 @@ def list_of_pixel_pairs(s, n, wrapping=False, format=Format.MATRIX, circle=False
                 for x in range(n):
                     for y in range(n):
                         if wrapping:
-                            add_pair(pairs, x, y, (x+i)%n, (y+j)%n, format, circle)
+                            add_pair(pairs, x, y, (x+i)%n, (y+j)%n, s, n, format, circle)
                             if i != 0 and j != 0:
-                                add_pair(pairs, x, y, (x-i)%n, (y+j)%n, format, circle)
+                                add_pair(pairs, x, y, (x-i)%n, (y+j)%n, s, n, format, circle)
                         else:
                             if y + j < n:
                                 if x + i < n:
-                                    add_pair(pairs, x, y, x+i, y+j, format, circle)
+                                    add_pair(pairs, x, y, x+i, y+j, s, n, format, circle)
                                 if x - i >= 0 and i != 0 and j != 0:
-                                    add_pair(pairs, x, y, x-i, y+j, format, circle)
+                                    add_pair(pairs, x, y, x-i, y+j, s, n, format, circle)
                     
     return pairs
+    
+def circle_helper(coloring, s, n):
+    center_length = float(s)/2
+    pixel_length = float(s)/n
+    for i in range(n):
+        for j in range(n):
+            x = (i+0.5)*pixel_length
+            y = (j+0.5)*pixel_length
+            dist = math.hypot(x - center_length, y - center_length)
+            if dist > center_length:
+                coloring[i][j] = 9

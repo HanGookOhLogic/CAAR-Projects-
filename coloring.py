@@ -4,6 +4,7 @@ import simulated_annealing
 import sat_solver
 import sat_solver_bits
 import integer_programming
+import pairs_helper
 
 canUseMatPlotLib = True
 try:
@@ -72,10 +73,10 @@ else:
         name = 'SAT/' + name
         coloring = None
         if not args.bits:
-            coloring = sat_solver.SAT_solve(args.s, args.n, args.k, args.wrapping, args.circ)
+            coloring = sat_solver.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ)
         else:
             name = name + '_bits'
-            coloring = sat_solver_bits.SAT_solve(args.s, args.n, args.k, args.wrapping, args.circ)
+            coloring = sat_solver_bits.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ)
         
         if coloring == "UNSAT":
             print "This coloring problem is unsatisfiable."
@@ -90,6 +91,9 @@ else:
 
 num_col = 0
 for coloring in colorings:
+    if args.circ:
+        pairs_helper.circle_helper(coloring, args.s, args.n)
+        
     current_name = name
     if args.iter:
         current_name = current_name + str(num_col)
@@ -97,7 +101,7 @@ for coloring in colorings:
         numpy.save('./colorarrays/' + current_name, coloring)
         print current_name + '.npy saved'
     else:
-        printColorGrid.create_coloring(coloring, args.n, args.k, './Colorings/' + current_name)
+        printColorGrid.create_coloring(coloring, args.n, 10, './Colorings/' + current_name)
         print 'Fig saved'
         print current_name
     num_col += 1
