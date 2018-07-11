@@ -19,7 +19,7 @@ N = 20 # Number of pixels on one side of square
 K = 7 # Number of colors
 INIT_TEMP = 10 # Initial temperature for the simulated annealing algorithm
 COOLING_RATE = 0.15 # Cooling rate for the simulated annealing algorithm. Each iteration, T is multiplied by (1-cooling_rate)
-
+LENGTH_INCREASE = 1.2
 
 parser = argparse.ArgumentParser(description="Find discrete colorings of the plane. If command line arguments not used, the default constants in the .py will be used instead.")
 
@@ -36,6 +36,7 @@ parser.add_argument('--iter', action='store_true', help='iterate through all sol
 parser.add_argument('--bits', action='store_true', help='use SAT solver with bit variales')
 parser.add_argument('-t', type=int, default=INIT_TEMP, help='initial temperature for simulated annealing')
 parser.add_argument('-cr', type=float, default=COOLING_RATE, help='cooling rate for simulated annealing')
+parser.add_argument('-li', type=float, default=LENGTH_INCREASE, help='length increase rate for repetition schedule of simulated annealing')
 parser.add_argument('--dens', action='store_true', help='include density of color in cost of simulated annealing')
 parser.add_argument('--cont', action='store_true', help='reward continuity of color in cost of simulated annealing')
 parser.add_argument('--npy', action='store_true', help='store coloring in .npy file instead of png')
@@ -61,7 +62,7 @@ if args.sim:
     if args.cont:
         name += '_cont'
     # use simulated annealing to find an optimal coloring given the parameters
-    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.circ, args.annu, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont)
+    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.circ, args.annu, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont, length_increase=args.li)
     colorings.append(coloring)
     
     name += '_cost' + ("{:.2f}".format(cost)).replace('.',',')

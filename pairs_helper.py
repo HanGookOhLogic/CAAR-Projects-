@@ -7,14 +7,17 @@ class Format(Enum):
     MATRIX = 2
 
 def in_circ(point, s, n, annulus=False):
-    center_length = 0.5
-    if not annulus:
-        center_length = float(s)/2
+    center_length = float(s)/2
     pixel_length = float(s)/n
     x = (point[0]+0.5)*pixel_length
     y = (point[1]+0.5)*pixel_length
     dist = math.hypot(x - center_length, y - center_length)
-    if dist <= center_length:
+    
+    circle_radius = center_length
+    if annulus:
+        circle_radius = 0.5
+    
+    if dist <= circle_radius:
         return True
     else:
         return False    
@@ -77,7 +80,6 @@ def list_of_pixel_pairs(s, n, wrapping=False, format=Format.MATRIX, circle=False
                                     add_pair(pairs, x, y, x+i, y+j, s, n, format, circle, annulus)
                                 if x - i >= 0 and i != 0 and j != 0:
                                     add_pair(pairs, x, y, x-i, y+j, s, n, format, circle, annulus)
-                    
     return pairs
     
 def circle_helper(coloring, s, n, annulus=False):
