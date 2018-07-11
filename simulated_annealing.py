@@ -88,8 +88,8 @@ def change_pixel(assignment, pixel, color):
 # density_scale - how much weight the density of the first color has in the cost
 # use_continuity_cost - set to True to reward continuity of colors in the cost function
 # continuity_scale - how much weight continuity has in the cost
-def simulated_annealing(s, n, k, wrapping=False, circle=False, T_initial=10, cooling_rate=0.15, final_temp=0.05, length_initial=100, length_increase=1.2, use_density_cost=False, density_scale=1, use_continuity_cost=False, continuity_scale=0.25):
-    pairs = pairs_helper.list_of_pixel_pairs(s, n, wrapping, pairs_helper.Format.MATRIX, circle)
+def simulated_annealing(s, n, k, wrapping=False, circle=False, annulus=False, T_initial=10, cooling_rate=0.15, final_temp=0.05, length_initial=100, length_increase=1.2, use_density_cost=False, density_scale=1, use_continuity_cost=False, continuity_scale=0.25):
+    pairs = pairs_helper.list_of_pixel_pairs(s, n, wrapping, pairs_helper.Format.MATRIX, circle, annulus)
     current_assignment = random_assignment(k, n)
     current_cost = total_cost(pairs, current_assignment, n)
     

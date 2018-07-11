@@ -31,6 +31,7 @@ parser.add_argument('-n', '-N', type=int, default=N, help='number of pixels on o
 parser.add_argument('-k', '-K', type=int, default=K, help='number of colors')
 parser.add_argument('--wrapping', '--wrap',  action='store_true', help='Whether or not we wrap distances across edges of square when finding pairs of pixels unit distance from each other')
 parser.add_argument('--circ', action='store_true', help='circle bound instead of square')
+parser.add_argument('--annu', action='store_true', help='annulus bound instead of square')
 parser.add_argument('--iter', action='store_true', help='iterate through all solutions for the SAT solver')
 parser.add_argument('--bits', action='store_true', help='use SAT solver with bit variales')
 parser.add_argument('-t', type=int, default=INIT_TEMP, help='initial temperature for simulated annealing')
@@ -45,7 +46,11 @@ colorings = []
 name = 's' + (str(args.s)).replace('.',',') + '_n' + str(args.n) + '_k' + str(args.k)
 if args.wrapping:
     name += '_wrapping'
-if args.circ:
+    
+if args.annu:
+    args.circ = True
+    name += '_annulus'
+elif args.circ:
     name += '_circle'
     
 # SIMULATED ANNEALING
@@ -56,14 +61,14 @@ if args.sim:
     if args.cont:
         name += '_cont'
     # use simulated annealing to find an optimal coloring given the parameters
-    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.circ, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont)
+    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.circ, args.annu, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont)
     colorings.append(coloring)
     
     name += '_cost' + ("{:.2f}".format(cost)).replace('.',',')
 
 elif args.prog:
     name = 'programming/' + name
-    coloring, cost = integer_programming.relaxed_integer_programming(args.s, args.n, args.k, args.wrapping, args.circ)
+    coloring, cost = integer_programming.relaxed_integer_programming(args.s, args.n, args.k, args.wrapping, args.circ, args.annu)
     colorings.append(coloring)
     name += '_cost' + str(cost)
     
@@ -73,10 +78,10 @@ else:
         name = 'SAT/' + name
         coloring = None
         if not args.bits:
-            coloring = sat_solver.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ)
+            coloring = sat_solver.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ, annulus=args.annu)
         else:
             name = name + '_bits'
-            coloring = sat_solver_bits.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ)
+            coloring = sat_solver_bits.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ, annulus=args.annu)
         
         if coloring == "UNSAT":
             print "This coloring problem is unsatisfiable."
@@ -85,14 +90,14 @@ else:
             
     else:
         name = 'SAT_iter/' + name + '_iter'
-        colorings = sat_solver.SAT_itersolve(args.s, args.n, args.k, args.wrapping, args.circ)
+        colorings = sat_solver.SAT_itersolve(args.s, args.n, args.k, args.wrapping, args.circ, args.annu)
         if not colorings:
             print "This coloring problem is unsatisfiable."
 
 num_col = 0
 for coloring in colorings:
     if args.circ:
-        pairs_helper.circle_helper(coloring, args.s, args.n)
+        pairs_helper.circle_helper(coloring, args.s, args.n, args.annu)
         
     current_name = name
     if args.iter:
