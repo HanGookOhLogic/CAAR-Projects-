@@ -89,14 +89,9 @@ def list_of_pixel_pairs(s, n, wrapping=False, format=Format.MATRIX, circle=False
     return pairs
     
 def circle_helper(coloring, s, n, annulus=False):
-    center_length = float(s)/2
-    pixel_length = float(s)/n
-    for i in range(n):
-        for j in range(n):
-            x = (i+0.5)*pixel_length
-            y = (j+0.5)*pixel_length
-            dist = math.hypot(x - center_length, y - center_length)
-            if dist > center_length:
-                coloring[i][j] = 9
-            if annulus and dist <= 0.5:
-                coloring[i][j] = 9
+    for x in range(n):
+        for y in range(n):
+            if not in_circ((x, y), s, n):
+                coloring[x][y] = 9
+            if annulus and in_circ((x, y), s, n, True):
+                coloring[x][y] = 9
