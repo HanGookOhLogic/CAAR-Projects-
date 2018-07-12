@@ -3,6 +3,8 @@ from random import random as rnd
 from math import sqrt as sq
 from time import clock as cl
 
+from mpi4py import MPI
+
 class Columns(object):
     def __init__(self,r,bg,th,pert=0):
         self.r = r+rnd()*2*pert-pert
@@ -32,33 +34,45 @@ def do():
     numgens = 50
     pertf = lambda x:0.5/sq(x)
     
+    comm = MPI.COMM_WORLD
+    rank = comm.Get_rank()
+    proc_size = comm.Get_size()
+    
     l = [Columns.rand() for i in range(size)]
-    print()
-    [print(n) for n in l]
-    print()
+    #print()
+    #[print(n) for n in l]
+    #print()
     gen = 1
     gens = []
     t = []
     for n in l:
         t.append(n)
     gens.append(t)
+    new_size = size / 2
     while gen<numgens:
         Columns.sort(l)
         [l.pop(-1) for i in range(int(size/2))]
         pert = pertf(gen)
+        
         ll = []
-        for i in range(len(l)-1):
-            ll.append(Columns.merge(l[i],l[i+1],pert))
-        ll.append(Columns.merge(l[len(l)-1],l[0],pert))
-        l.extend(ll)
-        print()
-        print("Gen",gen,"done.")
-        [print(n) for n in l]
-        print()
-        t = []
-        for n in l:
-            t.append(n)
-        gens.append(t)
+        
+        num_cols = new_size/proc_size
+        for i in range(num_cols*rank, num_cols*(rank+1)):
+            ll.append(Columns.merge(l[i],l[(i+1)%new_size],pert))
+        
+        new_cols = comm.reduce(ll)
+        
+        if rank == 0:
+            l.extend(new_cols)
+        
+        #print()
+        #print("Gen",gen,"done.")
+        #[print(n) for n in l]
+        #print()
+            t = []
+            for n in l:
+                t.append(n)
+            gens.append(t)
         gen+=1
         
 def check():

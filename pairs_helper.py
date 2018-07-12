@@ -9,9 +9,15 @@ class Format(Enum):
 def in_circ(point, s, n, annulus=False):
     center_length = float(s)/2
     pixel_length = float(s)/n
-    x = (point[0]+0.5)*pixel_length
-    y = (point[1]+0.5)*pixel_length
-    dist = math.hypot(x - center_length, y - center_length)
+    
+    dist = 0
+    for i in range(1):
+        for j in range(1):
+            x = (point[0]+i)*pixel_length
+            y = (point[1]+j)*pixel_length
+            new_dist = math.hypot(x - center_length, y - center_length)
+            if new_dist > dist:
+                dist = new_dist
     
     circle_radius = center_length
     if annulus:
