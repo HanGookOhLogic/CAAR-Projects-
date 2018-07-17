@@ -50,12 +50,12 @@ def total_cost(coloring, pairs):
             cost += 1
     return cost
     
-def relaxed_integer_programming(S, N, K, wrapping=False, circle=False, annulus=False):
-    pairs = pairs_helper.list_of_pixel_pairs(S, N, wrapping, pairs_helper.Format.LIST, circle, annulus)
+def relaxed_integer_programming(args):
+    pairs = pairs_helper.list_of_pixel_pairs(args, pairs_helper.Format.LIST)
     
-    prob, lpVars = create_problem(pairs, N, K)
+    prob, lpVars = create_problem(pairs, args.n, args.k)
     prob.solve()
     print LpStatus[prob.status]
-    coloring = solution_to_coloring(prob, lpVars, N, K)
+    coloring = solution_to_coloring(prob, lpVars, args.n, args.k)
     cost = total_cost(coloring, pairs)
     return coloring, cost

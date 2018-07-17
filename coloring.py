@@ -26,9 +26,10 @@ parser = argparse.ArgumentParser(description="Find discrete colorings of the pla
 parser.add_argument('--sat', action='store_true', help='use the SAT solver')
 parser.add_argument('--sim', action='store_true', help='use simulated annealing. Without this flag the default action is SAT.')
 parser.add_argument('--prog', action='store_true', help='use integer programming')
-parser.add_argument('-s', '-S', type=float, default=S, help='side length of nxn square')
-parser.add_argument('-n', '-N', type=int, default=N, help='number of pixels on one side of square')
-parser.add_argument('-k', '-K', type=int, default=K, help='number of colors')
+parser.add_argument('-s', type=float, default=S, help='side length of nxn square')
+parser.add_argument('-n', type=int, default=N, help='number of pixels on one side of square')
+parser.add_argument('-k', type=int, default=K, help='number of colors')
+parser.add_argument('-forb', type=float, default=1, help='second forbidden distance')
 parser.add_argument('--wrapping', '--wrap',  action='store_true', help='Whether or not we wrap distances across edges of square when finding pairs of pixels unit distance from each other')
 parser.add_argument('--circ', action='store_true', help='circle bound instead of square')
 parser.add_argument('--annu', action='store_true', help='annulus bound instead of square')
@@ -62,14 +63,14 @@ if args.sim:
     if args.cont:
         name += '_cont'
     # use simulated annealing to find an optimal coloring given the parameters
-    coloring, cost = simulated_annealing.simulated_annealing(args.s, args.n, args.k, args.wrapping, args.circ, args.annu, args.t, args.cr, use_density_cost=args.dens, use_continuity_cost=args.cont, length_increase=args.li)
+    coloring, cost = simulated_annealing.simulated_annealing(args)
     colorings.append(coloring)
     
     name += '_cost' + ("{:.2f}".format(cost)).replace('.',',')
 
 elif args.prog:
     name = 'programming/' + name
-    coloring, cost = integer_programming.relaxed_integer_programming(args.s, args.n, args.k, args.wrapping, args.circ, args.annu)
+    coloring, cost = integer_programming.relaxed_integer_programming(args)
     colorings.append(coloring)
     name += '_cost' + str(cost)
     
@@ -79,10 +80,10 @@ else:
         name = 'SAT/' + name
         coloring = None
         if not args.bits:
-            coloring = sat_solver.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ, annulus=args.annu)
+            coloring = sat_solver.SAT_solve(args)
         else:
             name = name + '_bits'
-            coloring = sat_solver_bits.SAT_solve(args.s, args.n, args.k, args.wrapping, circle=args.circ, annulus=args.annu)
+            coloring = sat_solver_bits.SAT_solve(args)
         
         if coloring == "UNSAT":
             print "This coloring problem is unsatisfiable."
@@ -91,7 +92,7 @@ else:
             
     else:
         name = 'SAT_iter/' + name + '_iter'
-        colorings = sat_solver.SAT_itersolve(args.s, args.n, args.k, args.wrapping, args.circ, args.annu)
+        colorings = sat_solver.SAT_itersolve(args)
         if not colorings:
             print "This coloring problem is unsatisfiable."
 

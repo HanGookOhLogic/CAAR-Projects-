@@ -70,10 +70,10 @@ def solution_to_coloring(solution, N, K):
 # Given parameters S (side length of square), N (number of pixels on side of square), K (number of colors)
 # and wrapping (true if we want pixels to be adjacent accross border of square), this function uses a SAT
 # solver and returns a satisfying coloring or "UNSAT" if the problem is not satisfiable
-def SAT_solve(S, N, K, wrapping=False, itersolve=False, circle=False, annulus=False):
-    pairs = pairs_helper.list_of_pixel_pairs(S, N, wrapping, pairs_helper.Format.LIST, circle, annulus)
+def SAT_solve(args, itersolve=False):
+    pairs = pairs_helper.list_of_pixel_pairs(args, pairs_helper.Format.LIST)
 
-    cnf = pairs_to_SAT(pairs, S, N, K)
+    cnf = pairs_to_SAT(pairs, args.s, args.n, args.k)
     
     solution = []
     if itersolve:
@@ -84,10 +84,10 @@ def SAT_solve(S, N, K, wrapping=False, itersolve=False, circle=False, annulus=Fa
         return solution
     
     if itersolve:
-        return [solution_to_coloring(sol, N, K) for sol in solution]
+        return [solution_to_coloring(sol, args.n, args.k) for sol in solution]
     else:
-        return solution_to_coloring(solution, N, K)
+        return solution_to_coloring(solution, args.n, args.k)
 
 # Like SAT_Solve but instead of returning one solution, it returns a list of all solutions
-def SAT_itersolve(S, N, K, wrapping, circle):
-    return SAT_solve(S, N, K, wrapping, True, circle)
+def SAT_itersolve(args):
+    return SAT_solve(args, True)
