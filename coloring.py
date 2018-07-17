@@ -56,7 +56,7 @@ elif args.circ:
     name += '_circle'
 
 if args.forb != 1:
-    name += '_forb' + (str(forb)).replace('.',',')
+    name += '_forb' + (str(args.forb)).replace('.',',')
     
 # SIMULATED ANNEALING
 if args.sim:
