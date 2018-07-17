@@ -30,9 +30,9 @@ def in_circ(point, s, n, annulus=False):
 
 # adds a pair of adjacent pixels to the pairs data structure depending on format specified
 def add_pair(pairs, x1, y1, x2, y2, args, format):
-    if args.circle and not (in_circ((x1, y1), args.s, args.n) and in_circ((x2, y2), args.s, args.n)):
+    if args.circ and not (in_circ((x1, y1), args.s, args.n) and in_circ((x2, y2), args.s, args.n)):
         return
-    if args.annulus and (in_circ((x1, y1), args.s, args.n, True) or in_circ((x2, y2), args.s, args.n, True)):
+    if args.annu and (in_circ((x1, y1), args.s, args.n, True) or in_circ((x2, y2), args.s, args.n, True)):
         return
     
     if format == Format.LIST:
