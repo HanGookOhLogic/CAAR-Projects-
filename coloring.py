@@ -54,6 +54,9 @@ if args.annu:
     name += '_annulus'
 elif args.circ:
     name += '_circle'
+
+if forb != 1:
+    name += '_forb' + (str(forb)).replace('.',',')
     
 # SIMULATED ANNEALING
 if args.sim:
