@@ -9,7 +9,7 @@ import pairs_helper
 canUseMPI = True
 try:
     from mpi4py import MPI
-except Import Error:
+except ImportError:
     canUseMPI = False
     
 canUseMatPlotLib = True
