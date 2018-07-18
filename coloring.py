@@ -6,6 +6,12 @@ import sat_solver_bits
 import integer_programming
 import pairs_helper
 
+canUseMPI = True
+try:
+    from mpi4py import MPI
+except Import Error:
+    canUseMPI = False
+    
 canUseMatPlotLib = True
 try:
     import printColorGrid
@@ -99,6 +105,9 @@ else:
         if not colorings:
             print "This coloring problem is unsatisfiable."
 
+if canUseMPI:
+    colorings = MPI.COMM_WORLD.reduce(colorings)
+    
 num_col = 0
 for coloring in colorings:
     if args.circ:
