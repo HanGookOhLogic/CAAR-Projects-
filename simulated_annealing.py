@@ -93,12 +93,12 @@ def simulated_annealing(args, final_temp=0.05, length_initial=100, density_scale
     current_assignment = random_assignment(args.k, args.n)
     current_cost = total_cost(pairs, current_assignment, args.n)
     
-    if use_density_cost:
+    if args.dens:
         first_color_frequency = find_first_color_frequency(current_assignment, args.n)
         current_cost += density_scale*total_density_cost(first_color_frequency, args.n)
         
     
-    T = T_initial
+    T = args.t
     length = length_initial
     while T > final_temp and current_cost > 0:
         iter = 0
@@ -120,6 +120,6 @@ def simulated_annealing(args, final_temp=0.05, length_initial=100, density_scale
                     change_pixel(current_assignment, new_pixel, new_color)
                     current_cost += change_in_cost
             iter += 1
-        T = T*(1-cooling_rate)
+        T = T*(1-args.cr)
         length *= args.li
     return current_assignment, current_cost
