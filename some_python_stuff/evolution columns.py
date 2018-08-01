@@ -1,4 +1,4 @@
-import simulated_annealing
+import montecarlo
 from random import random as rnd
 from math import sqrt as sq
 from time import clock as cl
@@ -8,7 +8,8 @@ class Columns(object):
         self.r = r+rnd()*2*pert-pert
         self.bg = bg+rnd()*2*pert-pert
         self.th = th+rnd()*2*pert-pert
-        self.p = simulated_annealing.color3kruskal(self.r,self.bg,self.th)
+        #self.p = montecarlo.testBar3(self.r,self.bg,self.th)
+        self.p = montecarlo.testBar4(self.r,self.th)
         print(".",end="")
     def merge(c1,c2,p):
         r = (c1.p*c1.r+c2.p*c2.r)/(c1.p+c2.p)
@@ -25,13 +26,13 @@ class Columns(object):
                     l[j] = l[j+1]
                     l[j+1] = t
     def __str__(self):
-        return "R:"+str(self.r)+" BG:"+str(self.bg)+" TH:"+str(self.th)+" --> "+str(self.p)
+        #return "R:"+str(self.r)+" BG:"+str(self.bg)+" TH:"+str(self.th)+" --> "+str(self.p)
+        return "W:"+str(self.r)+" TH:"+str(self.th)+" --> "+str(self.p)
 
 def do():
     size = 20
     numgens = 50
     pertf = lambda x:0.5/sq(x)
-    
     l = [Columns.rand() for i in range(size)]
     print()
     [print(n) for n in l]

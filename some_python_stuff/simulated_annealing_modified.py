@@ -94,9 +94,9 @@ def color2(n):
     print("ratio:",round(a/b,3))
 
 def color3(h1):
-    h = h1*1.5
-    w = h*s(3)
-    f = open("hexagon tileblock.txt",'r')
+    h = h1*s(3)
+    w = h1*3
+    f = open("hex4.txt",'r')
     l = list(map(list,f.read().split("\n")))
     r = len(l)
     c = len(l[0])
@@ -106,7 +106,23 @@ def color3(h1):
     massignment = [[0 for i in range(c)] for j in range(r)]
     a = total_cost(pairs,l,r,c)
     b = total_cost(pairs,massignment,r,c)
-    print(h/1.5, a/b)
+    print(w/3, a/b)
+
+def colortemp(s):
+        w = s
+        h = s
+        f = open("coloring_text.txt")
+        l = list(map(list,f.read().split("\n")))
+        r = 250
+        c = 250
+        for i in range(len(l)):
+                l[i] = list(map(int,l[i]))
+        pairs = pairs_helper.rect_pixel_pairs(w,h,r,c,True)
+        massignment = [[0 for i in range(c)] for j in range(r)]
+        a = total_cost(pairs,l,r,c)
+        b = total_cost(pairs,massignment,r,c)
+        print(s,a/b)
+        
 
 def color3kruskal(r, bg, th):
     """r = width of red column, bg = width of bluegreen column, th = thickness
@@ -156,8 +172,54 @@ def color3kruskal(r, bg, th):
 
     print("R:"+str(r),"BG:"+str(bg),"TH:"+str(th),"-->", ratio)
 
+
+
+
+
+p = pairs_helper.rect_pixel_pairs(3,3,300,300,True)
+l = [[0 for i in range(300)] for j in range(300)]
+print(total_cost(p,l,300,300))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #print(color3kruskal(0.61,0.97,0.97))
-color3kruskal(0.62,0.96,0.98)
+#color3kruskal(0.62,0.96,0.98)
 
 
 
@@ -168,11 +230,10 @@ color3kruskal(0.62,0.96,0.98)
 
 
 
-
-
-
-
-
+##pairs = pairs_helper.rect_pixel_pairs(6,6,100,100,True)
+##massignment = [[0 for i in range(100)] for j in range(100)]
+##b = total_cost(pairs,massignment,100,100)
+##print(b)
 
 
 
