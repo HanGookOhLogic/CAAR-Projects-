@@ -1,8 +1,5 @@
 from math import *
 from random import random as r
-from turtle import *
-
-speed(10)
 
 ##############################################
 #                MAIN TOOLS                  #
@@ -69,13 +66,16 @@ def test(x,y,reps,dyct):
     bad = 0
     for rep in range(reps):
         #first pair of points
-        x1 = r()*x-x/2
-        y1 = r()*y-y/2
+        x1 = r()*x
+        y1 = r()*y
         #choose a random angle/direction to move
         theta = r()*2*pi
         #second point one unit away
         x2 = (x1+cos(theta))%x-x/2
         y2 = (y1+sin(theta))%y-y/2
+        #fix to be centered at 0
+        x1-=x/2
+        y1-=y/2
         #check which region contains the first point
         for s in dyct:
             if s.sat(x1,y1):
@@ -87,6 +87,7 @@ def test(x,y,reps,dyct):
                 c2 = dyct[s]
                 break
         #if the colors are the same, increase the count
+        #print(c1,c2)
         if c1 == c2:
             bad +=1
     return bad/reps
@@ -149,6 +150,21 @@ class PeggPent(object):
     def __str__(self):
         return str(self.s)
 
+class PritPent(object):
+    def __init__(self,x,y,right):
+        s = {True:1,False:-1}[right]
+        m = 2.49557
+        b = 0.013622
+        m21 = sqrt(m**2+1)
+        l1 = Line(1,0,x,not right)
+        l2 = Line(0,1,y-1/4,False)
+        l3 = Line(0,1,y+1/4,True)
+        l4 = Line(-m,1,-m*x-s*m21+s/2+s*b+y-s*1/4,not right)
+        l5 = Line(m,1,m*x+s*m21-s/2-s*b+y+s*1/4,right)
+        self.s = Set(l1,l2,l3,l4,l5)
+    def sat(self,x,y):
+        return self.s.sat(x,y)
+
 ###############################
 #            TESTING          #
 #-----------------------------#
@@ -170,7 +186,7 @@ def testHex3(d):
     g2 = Hexagon(-3*d/4,d*sqrt(3)/4,d)
     g3 = Hexagon(3*d/4,d*sqrt(3)/4,d)
     dyct = {r1:0,r2:0,r3:0,r4:0,r5:0,b1:1,b2:1,b3:1,g1:2,g2:2,g3:2}
-    return test(3*d/2,3*sqrt(3)/2*d,100000,dyct)
+    return test(3*d/2,3*sqrt(3)/2*d,10000,dyct)
 
 def testBar3(r,bg,th):
     x1 = Line(1,0,-r-bg,False)
@@ -209,7 +225,7 @@ def testHex4(d):
     y1 = Hexagon(d*3/4,d*sqrt(3)/4,d)
     y2 = Hexagon(-d*3/4,-d*sqrt(3)/4,d)
     dyct = {r1:0,r2:0,r3:0,r4:0,r5:0,b1:1,b2:1,b3:1,b4:1,g1:2,g2:2,y1:3,y2:3}
-    return test(3*d,sqrt(3)*d,10000,dyct)
+    return test(3*d,sqrt(3)*d,100000,dyct)
 
 def testBar4(w,th):
     r = w
@@ -252,7 +268,7 @@ def testSq5(d):
         dyct[e[i]] = 2
         dyct[y[i]] = 3
         dyct[r[i]] = 4
-    return test(5*d,5*d,1000,dyct)
+    return test(5*d,5*d,10000,dyct)
 
 def testPegg6():
     d = (1+sqrt(7))/4
@@ -271,16 +287,32 @@ def testPegg6():
     p1 = PeggPent(-d/2,0,True)
     p2 = PeggPent(d,-d*1.5,True)
     dyct = {r1:0,r2:0,b1:1,b2:1,b3:1,g1:2,g2:2,t1:3,t2:3,t3:3,y1:4,y2:4,p1:5,p2:5}
-    return test(3*d,3*d,1000000,dyct)
+    return test(3*d,3*d,100000,dyct)
 
-##for i in range(1,201):
-##    goto(i,100*testSq5(i/100))
+def testPrit6():
+    m = 2.49557
+    b = 0.013622
+    m21 = sqrt(m**2+1)
+    c = (2*m21-3/4-2*b)/m
+    r1 = PritPent(c,0.5,False)
+    r2 = PritPent(0,-0.25,False)
+    b1 = PritPent(c,0,False)
+    b2 = PritPent(0,0.75,False)
+    b3 = PritPent(0,-0.75,False)
+    g1 = PritPent(c,-0.5,False)
+    g2 = PritPent(0,0.25,False)
+    y1 = PritPent(-c,0.5,True)
+    y2 = PritPent(0,-0.25,True)
+    t1 = PritPent(-c,0,True)
+    t2 = PritPent(0,-0.75,True)
+    t3 = PritPent(0,0.75,True)
+    p1 = PritPent(-c,-0.5,True)
+    p2 = PritPent(0,0.25,True)
+    dyct = {r1:0,r2:0,b1:1,b2:1,b3:1,g1:2,g2:2,y1:3,y2:3,t1:4,t2:4,t3:4,p1:5,p2:5}
+    return test(2*c,1.5,10000,dyct)
 
-
-
-print(testSq5(10))
-
-
+for i in range(10):
+    print(testHex4(1.114901))
 
 
 
