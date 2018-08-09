@@ -11,6 +11,15 @@ from random import random as r
 #              BOUNDS ON X AND Y (A GROUP    #
 #              OF LINES)                     #
 #                                            #
+#VECTOR CLASS: REPRESENTS A VECTOR (HELPS    #
+#              WITH IMPLEMENTATION OF        #
+#              PARALLELOGRAM CLASS)          #
+#                                            #
+#PAR... CLASS: REPRESENTS A PARALLELOGRAM    #
+#              FOR THE SPECIFIC PURPOSE OF   #
+#              USING A PARALLELOGRAM AS A    #
+#              TILEBLOCK                     #
+#                                            #
 # TEST METHOD: RUNS MONTE CARLO SIMULATION   #
 #              GIVEN THE LENGTH/WIDTH OF     #
 #              A RECTANGLE (FOR WRAPPING),   #
@@ -27,6 +36,12 @@ from random import random as r
 #              THE SAME. WE THEN CALCULATE   #
 #              THE FRACTION OF PAIRS THAT    #
 #              WERE BAD                      #
+#                                            #
+#TESTP METHOD: RUNS MONTE CARLO SIMULATION   #
+#              GIVEN A PARALLELOGRAM TILE-   #
+#              BLOCK, A NUMBER OF REPS, AND  #
+#              A DICTIONARY MAPPING REGIONS  #
+#              (WHICH ARE SETS) TO COLORS    #
 ##############################################
 
 class Line(object):
@@ -61,6 +76,56 @@ class Set(object):
             s+=str(line)+"\n"
         return s
 
+class Vector(object):
+    def __init__(self,x,y):
+        self.xy = [x,y]
+        self.x = x
+        self.y = y
+    def __add__(self,other):
+        return Vector(self.x+other.x,self.y+other.y)
+    def __sub__(self,other):
+        return Vector(self.x-other.x,self.y-other.y)
+    def gen(x1,x2,y1,y2):
+        return Vector(r()*(x2-x1)+x1,r()*(y2-y1)+y1)
+    def __mul__(self,scalar):
+        return Vector(self.x*scalar,self.y*scalar)
+
+class Parallelogram(object):
+    def __init__(self,v1,v2):
+        #make sure v1 is the bottom side of the parallelogram
+        self.v1 = v1
+        self.v2 = v2
+        self.diag = v1+v2
+        bl = [-self.diag.x/2,-self.diag.y/2]
+        tr = [self.diag.x/2,self.diag.y/2]
+        self.l1 = Line(v1.y,-v1.x,v1.y*bl[0]-v1.x*bl[1],False)
+        self.l2 = Line(v2.y,-v2.x,v2.y*bl[0]-v2.x*bl[1],False)
+        self.l3 = Line(v1.y,-v1.x,v1.y*tr[0]-v1.x*tr[1],True)
+        self.l4 = Line(v2.y,-v2.x,v2.y*tr[0]-v2.x*tr[1],True)
+        self.s = Set(self.l1,self.l2,self.l3,self.l4)
+        print(self.l1,self.l2,self.l3,self.l4)
+    def mod(self,x,y):
+        while not self.l1.sat(x,y):
+            x += self.v2.x
+            y += self.v2.y
+        while not self.l2.sat(x,y):
+            x += self.v1.x
+            y += self.v1.y
+        while not self.l3.sat(x,y):
+            x -= self.v2.x
+            y -= self.v2.y
+        while not self.l4.sat(x,y):
+            x -= self.v1.x
+            y -= self.v1.y
+        return x, y
+    def gen(self):
+        x1, y1 = r()*self.diag.x-self.diag.x/2, r()*self.diag.y-self.diag.y/2
+        while not self.s.sat(x1,y1):
+            x1, y1 = r()*self.diag.x-self.diag.x/2, r()*self.diag.y-self.diag.y/2
+        theta = r()*2*pi
+        x2, y2 = self.mod(x1+cos(theta)), self.mod(y1+sin(theta))
+        return x1, y1, x2, y2
+
 def test(x,y,reps,dyct):
     #bad count
     bad = 0
@@ -92,6 +157,28 @@ def test(x,y,reps,dyct):
             bad +=1
     return bad/reps
 
+def testp(v1, v2, reps, dyct):
+    p = Parallelogram(v1, v2)
+    bad = 0
+    for rep in range(reps):
+        print("genning points")
+        x1, y1, x2, y2 = p.gen()
+        print("points genned")
+        for s in dyct:
+            if s.sat(x1,y1):
+                c1 = dyct[s]
+                break
+        for s in dyct:
+            if s.sat(x2,y2):
+                c2 = dyct[s]
+                break
+        print(c1,c2)
+        if c1 == c2:
+            bad += 1
+    return bad/reps
+
+
+
 ###############################
 #           REGIONS           #
 #-----------------------------#
@@ -119,6 +206,20 @@ class Hexagon(object):
         self.s = Set(l1,l2,l3,l4,l5,l6)
     def sat(self,x,y):
         return self.s.sat(x,y)
+    def H(v,d):
+        return Hexagon(v.x,v.y,d)
+
+class Triangle(object):
+    def __init__(self,x,y,d,up):
+        b = {True:1,False:-1}[up]
+        l1 = Line(0,1,y,not up)
+        l2 = Line(sqrt(3),1,sqrt(3)*(x+b*d/2)+y,up)
+        l3 = Line(-sqrt(3),1,-sqrt(3)*(x-b*d/2)+y,up)
+        self.s = Set(l1,l2,l3)
+    def sat(self,x,y):
+        return self.s.sat(x,y)
+    def T(v,d,up):
+        return Triangle(v.x,v.y,d,up)
 
 class Square(object):
     def __init__(self,x,y,d):
@@ -270,6 +371,38 @@ def testSq5(d):
         dyct[r[i]] = 4
     return test(5*d,5*d,10000,dyct)
 
+def testHexTri5(dh,dt):
+    ul = Vector(-1/2,sqrt(3)/2)
+    ur = Vector(1/2,sqrt(3)/2)
+    r = Vector(1,0)
+    dr = Vector(1/2,-sqrt(3)/2)
+    dl = Vector(-1/2,-sqrt(3)/2)
+    l = Vector(-1,0)
+    pv1 = ((ur+r)*(dh/2)+dr*dt)*2
+    pv2 = ((ul+ur)*(dh/2)+r*dt)*2
+    hr = (r+ur)*(dh/2)+dr*dt
+    hu = (ul+ur)*(dh/2)+r*dt
+    htv = r*(dt/2)
+    ghex = Hexagon(0,0,dh)
+    yhex1 = Hexagon.H(hr+hu,dh)
+    yhex2 = Hexagon.H((hr+hu)*(-1),dh)
+    yhex3 = Hexagon.H(hu-hr,dh)
+    yhex4 = Hexagon.H(hr-hu,dh)
+    rhex1 = Hexagon.H(hr,dh)
+    rhex2 = Hexagon.H(hr*-1,dh)
+    bhex1 = Hexagon.H(hu,dh)
+    bhex2 = Hexagon.H(hu*-1,dh)
+    ptri1 = Triangle.T(hr*(-1)+dr*(dh/2)-htv,dt,False)
+    ptri2 = Triangle.T(dl*(dh/2)-htv,dt,True)
+    ptri3 = Triangle.T(dr*(dh/2)-htv,dt,False)
+    ptri4 = Triangle.T(hu-hr+dr*(dh/2)-htv,dt,False)
+    ptri5 = Triangle.T(hr-hu+ul*(dh/2)+htv,dt,True)
+    ptri6 = Triangle.T(ul*(dh/2)+htv,dt,True)
+    ptri7 = Triangle.T(ur*(dh/2)+htv,dt,False)
+    ptri8 = Triangle.T(hr+ul*(dh/2)+htv,dt,True)
+    dyct = {ghex:0,yhex1:1,yhex2:1,yhex3:1,yhex4:1,rhex1:2,rhex2:2,bhex1:3,bhex2:3,ptri1:4,ptri2:4,ptri3:4,ptri4:4,ptri5:4,ptri6:4,ptri7:4,ptri8:4}
+    return testp(pv1,pv2,10000,dyct)
+
 def testPegg6():
     d = (1+sqrt(7))/4
     r1 = PeggPent(-d,d*1.5,False)
@@ -309,10 +442,7 @@ def testPrit6():
     p1 = PritPent(-c,-0.5,True)
     p2 = PritPent(0,0.25,True)
     dyct = {r1:0,r2:0,b1:1,b2:1,b3:1,g1:2,g2:2,y1:3,y2:3,t1:4,t2:4,t3:4,p1:5,p2:5}
-    return test(2*c,1.5,10000,dyct)
+    return test(2*c,1.5,100000000,dyct)
 
-for i in range(10):
-    print(testHex4(1.114901))
-
-
+print(testHexTri5(1,1))
 
