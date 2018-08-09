@@ -155,7 +155,7 @@ def test(x,y,reps,dyct):
         #print(c1,c2)
         if c1 == c2:
             bad +=1
-    return bad/reps
+    return float(bad)/reps, bad
 
 def testp(v1, v2, reps, dyct):
     p = Parallelogram(v1, v2)
@@ -253,15 +253,15 @@ class PeggPent(object):
 
 class PritPent(object):
     def __init__(self,x,y,right):
-        s = {True:1,False:-1}[right]
+        s = {True:1.0,False:-1.0}[right]
         m = 2.49557
         b = 0.013622
         m21 = sqrt(m**2+1)
         l1 = Line(1,0,x,not right)
-        l2 = Line(0,1,y-1/4,False)
-        l3 = Line(0,1,y+1/4,True)
-        l4 = Line(-m,1,-m*x-s*m21+s/2+s*b+y-s*1/4,not right)
-        l5 = Line(m,1,m*x+s*m21-s/2-s*b+y+s*1/4,right)
+        l2 = Line(0,1,y-0.25,False)
+        l3 = Line(0,1,y+0.25,True)
+        l4 = Line(-m,1,-m*x-s*m21+s*0.25+s*b+y,not right)
+        l5 = Line(m,1,m*x+s*m21-s*0.25-s*b+y,right)
         self.s = Set(l1,l2,l3,l4,l5)
     def sat(self,x,y):
         return self.s.sat(x,y)
@@ -426,7 +426,7 @@ def testPrit6():
     m = 2.49557
     b = 0.013622
     m21 = sqrt(m**2+1)
-    c = (2*m21-3/4-2*b)/m
+    c = (2*m21-0.75-2*b)/m
     r1 = PritPent(c,0.5,False)
     r2 = PritPent(0,-0.25,False)
     b1 = PritPent(c,0,False)
@@ -442,7 +442,3 @@ def testPrit6():
     p1 = PritPent(-c,-0.5,True)
     p2 = PritPent(0,0.25,True)
     dyct = {r1:0,r2:0,b1:1,b2:1,b3:1,g1:2,g2:2,y1:3,y2:3,t1:4,t2:4,t3:4,p1:5,p2:5}
-    return test(2*c,1.5,100000000,dyct)
-
-print(testHexTri5(1,1))
-
