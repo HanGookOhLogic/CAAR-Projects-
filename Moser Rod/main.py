@@ -1,2 +1,2 @@
 import plotter
-plotter()
+plotter.plotGraph()

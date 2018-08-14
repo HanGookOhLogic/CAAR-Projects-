@@ -1,7 +1,5 @@
 import numpy as np
 
-#line up circle colors with nodes 
-
 #Delta
 delta = 0.01
 

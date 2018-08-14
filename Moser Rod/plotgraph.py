@@ -1,16 +1,14 @@
 import numpy 
 from matplotlib import pyplot as plt
-import data
 
-def plotmoser(axes): 
-    points = numpy.array([[1,2],[4,5],[2,7],[3,9],[9,2]])
-    edges = numpy.array([[0,1],[3,4],[3,2],[2,4]])
-    
-    x = points[:,0].flatten()
-    y = points[:,1].flatten()
+def plotgraph(axes, data): 
+#    points = numpy.array([[1,2],[4,5],[2,7],[3,9],[9,2]])
+#    edges = numpy.array([[0,1],[3,4],[3,2],[2,4]])
+#    
+#    x = points[:,0].flatten()
+#    y = points[:,1].flatten()
     lines = numpy.array(data.edges).T
-    
-    
+
     xes = lines[0]
     yes = lines[1]
     

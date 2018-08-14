@@ -16,7 +16,7 @@ e = (  (-3 + np.sqrt(33) ) /12    , (np.sqrt((17 - np.sqrt(33))/6))  /2  )
 f = (  (-3 - np.sqrt(33) )  /12 , (np.sqrt(  (17 + np.sqrt(33))   /6))  /2)
 g = (  (3 + np.sqrt(33) )  /12 , (np.sqrt(  (17 + np.sqrt(33))   /6))  /2)
 
-
+points = [a,b,c,d,e,f,g]
 #Edges
 edges = [(a,b), (a,d), (a,e), (a,c),
             (b,e), (b,f),
